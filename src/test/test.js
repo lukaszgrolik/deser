@@ -1,8 +1,11 @@
 // @todo throw if config.serialize or config.deserialize contain field from config.fields
 // @todo should not copy non-listed fields
 // @todo feat - copy keys with null values
+// @todo test mapping array of docs
 
-let deser = require('../deser');
+let should = require('should');
+
+let deser = require('../index');
 
 let mapper1 = deser({
   fields: {
@@ -21,12 +24,12 @@ let mapper1 = deser({
         return item.val;
       }),
     };
-  };
+  },
 });
 
 describe('example 1', () => {
 
-  it('should serialize' => {
+  it('should serialize', () => {
     let doc = mapper1.serialize({
       eventId: 55,
       items: [
@@ -78,12 +81,12 @@ let mapper2 = deser({
         Currency: doc.currency,
       },
     };
-  };
+  },
 });
 
 describe('example 2', () => {
 
-  it('should deserialize' => {
+  it('should deserialize', () => {
     let doc = mapper2.deserialize({
       Description: {
         Id: 1,
