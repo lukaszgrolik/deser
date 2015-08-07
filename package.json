@@ -1,0 +1,11 @@
+{
+  "name": "deser",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/deser.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Łukasz Grolik",
+  "license": "MIT"
+}
