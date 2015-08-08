@@ -1,4 +1,5 @@
 // @todo throw if config.serialize or config.deserialize contain field from config.fields
+// @todo option - pass non-listed fields
 
 function deser(config) {
   return {

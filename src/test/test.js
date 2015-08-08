@@ -1,37 +1,49 @@
-// @todo throw if config.serialize or config.deserialize contain field from config.fields
-// @todo should not copy non-listed fields
-// @todo feat - copy keys with null values
-// @todo test mapping array of docs
-
 let should = require('should');
 
 let deser = require('../index');
 
-let mapper1 = deser({
-  fields: {
-    eventId: 'id_event',
-  },
-  deserialize: function(doc) {
-    return {
-      items: doc.items.map(function(item) {
-        return {val: item};
-      }),
-    };
-  },
-  serialize: function(doc) {
-    return {
-      items: doc.items.map(function(item) {
-        return item.val;
-      }),
-    };
-  },
+describe('config', () => {
+
+  it('should fail if deserialize option overwrites field', () => {
+    throw new Error();
+  });
+
+  it('should fail if serialize option overwrites field', () => {
+    throw new Error();
+  });
+
 });
 
-describe('example 1', () => {
+describe('with fields', () => {
+
+  let mapper = deser({
+    fields: {
+      eventId: 'id_event',
+      bar: 'BAR',
+      baz: 'BAZ',
+    },
+    deserialize: function(doc) {
+      return {
+        items: doc.items.map(function(item) {
+          return {val: item};
+        }),
+      };
+    },
+    serialize: function(doc) {
+      return {
+        items: doc.items.map(function(item) {
+          return item.val;
+        }),
+      };
+    },
+  });
 
   it('should serialize', () => {
-    let doc = mapper1.serialize({
+    let doc = mapper.serialize({
       eventId: 55,
+      foo: 'abc',
+      bar: null,
+      baz: undefined,
       items: [
         {val: 1},
         {val: 2},
@@ -39,57 +51,68 @@ describe('example 1', () => {
     });
 
     doc.should.have.property('id_event', 55);
+    doc.should.not.have.property('foo');
+    doc.should.not.have.property('FOO');
+    doc.should.have.property('BAR', null);
+    doc.should.have.property('BAZ', undefined);
     doc.should.have.property('items');
+    Object.keys(doc).length.should.equal(4);
     doc.items.should.be.instanceof(Array).and.have.lengthOf(2);
     doc.items[0].should.equal(1);
     doc.items[1].should.equal(2);
-    Object.keys(doc).length.should.equal(2);
   });
 
   it('should deserialize', () => {
-    let doc = mapper1.deserialize({
+    let doc = mapper.deserialize({
       id_event: 123,
+      FOO: 'xyz',
+      BAR: null,
+      BAZ: undefined,
       items: ['a', 'b', 'c'],
     });
 
     doc.should.have.property('eventId', 123);
+    doc.should.not.have.property('FOO');
+    doc.should.not.have.property('foo');
+    doc.should.have.property('bar', null);
+    doc.should.have.property('baz', undefined);
     doc.should.have.property('items');
+    Object.keys(doc).length.should.equal(4);
     doc.items.should.be.instanceof(Array).and.have.lengthOf(3);
     doc.items[0].should.have.property('val', 'a');
     doc.items[1].should.have.property('val', 'b');
     doc.items[2].should.have.property('val', 'c');
-    Object.keys(doc).length.should.equal(2);
   });
 
 });
 
-let mapper2 = deser({
-  deserialize: function(doc) {
-    return {
-      id: doc.Description.Id,
-      title: doc.Description.Title,
-      price: doc.Price.Last,
-      currency: doc.Price.Currency,
-    };
-  },
-  serialize: function(doc) {
-    return {
-      Description: {
-        Id: doc.id,
-        Title: doc.title,
-      },
-      Price: {
-        Last: doc.price,
-        Currency: doc.currency,
-      },
-    };
-  },
-});
+describe('nested object', () => {
 
-describe('example 2', () => {
+  let mapper = deser({
+    deserialize: function(doc) {
+      return {
+        id: doc.Description.Id,
+        title: doc.Description.Title,
+        price: doc.Price.Last,
+        currency: doc.Price.Currency,
+      };
+    },
+    serialize: function(doc) {
+      return {
+        Description: {
+          Id: doc.id,
+          Title: doc.title,
+        },
+        Price: {
+          Last: doc.price,
+          Currency: doc.currency,
+        },
+      };
+    },
+  });
 
   it('should deserialize', () => {
-    let doc = mapper2.deserialize({
+    let doc = mapper.deserialize({
       Description: {
         Id: 1,
         Title: 'ProductX',
@@ -108,7 +131,7 @@ describe('example 2', () => {
   });
 
   it('should serialize', () => {
-    let doc = mapper2.serialize({
+    let doc = mapper.serialize({
       id: 1,
       title: 'ProductX',
       price: 12,
@@ -124,6 +147,92 @@ describe('example 2', () => {
     Object.keys(doc).length.should.equal(2);
     Object.keys(doc.Description).length.should.equal(2);
     Object.keys(doc.Price).length.should.equal(2);
+  });
+
+});
+
+describe('array of objects', () => {
+
+  let mapper = deser({
+    fields: {
+      eventId: 'id_event',
+    },
+    deserialize: function(doc) {
+      return {
+        items: doc.items.map(function(item) {
+          return {val: item};
+        }),
+      };
+    },
+    serialize: function(doc) {
+      return {
+        items: doc.items.map(function(item) {
+          return item.val;
+        }),
+      };
+    },
+  });
+
+  it('should serialize', () => {
+    let obj = {
+      eventId: 55,
+      items: [
+        {val: 1},
+        {val: 2},
+      ],
+    };
+    let docs = mapper.serialize([obj, obj, obj]);
+
+    docs.should.be.instanceof(Array).and.have.lengthOf(3);
+
+    docs[0].should.have.property('id_event', 55);
+    docs[0].should.have.property('items');
+    docs[0].items.should.be.instanceof(Array).and.have.lengthOf(2);
+    docs[0].items[0].should.equal(1);
+    docs[0].items[1].should.equal(2);
+
+    docs[1].should.have.property('id_event', 55);
+    docs[1].should.have.property('items');
+    docs[1].items.should.be.instanceof(Array).and.have.lengthOf(2);
+    docs[1].items[0].should.equal(1);
+    docs[1].items[1].should.equal(2);
+
+    docs[2].should.have.property('id_event', 55);
+    docs[2].should.have.property('items');
+    docs[2].items.should.be.instanceof(Array).and.have.lengthOf(2);
+    docs[2].items[0].should.equal(1);
+    docs[2].items[1].should.equal(2);
+  });
+
+  it('should deserialize', () => {
+    let obj = {
+      id_event: 123,
+      items: ['a', 'b', 'c'],
+    };
+    let docs = mapper.deserialize([obj, obj, obj]);
+
+    docs.should.be.instanceof(Array).and.have.lengthOf(3);
+
+    docs[0].should.have.property('eventId', 123);
+    docs[0].should.have.property('items');
+    docs[0].items.should.be.instanceof(Array).and.have.lengthOf(3);
+    docs[0].items[0].should.have.property('val', 'a');
+    docs[0].items[1].should.have.property('val', 'b');
+    docs[0].items[2].should.have.property('val', 'c');
+
+    docs[1].should.have.property('eventId', 123);
+    docs[1].should.have.property('items');
+    docs[1].items.should.be.instanceof(Array).and.have.lengthOf(3);
+    docs[1].items[0].should.have.property('val', 'a');
+    docs[1].items[1].should.have.property('val', 'b');
+    docs[1].items[2].should.have.property('val', 'c');
+
+    docs[2].should.have.property('eventId', 123);
+    docs[2].should.have.property('items');
+    docs[2].items.should.be.instanceof(Array).and.have.lengthOf(3);
+    docs[2].items[0].should.have.property('val', 'a');
+    docs[2].items[1].should.have.property('val', 'b');
+    docs[2].items[2].should.have.property('val', 'c');
   });
 
 });
