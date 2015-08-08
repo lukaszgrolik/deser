@@ -38,11 +38,12 @@ describe('example 1', () => {
       ],
     });
 
-    doc.should.have.property('event_id', 55);
+    doc.should.have.property('id_event', 55);
     doc.should.have.property('items');
     doc.items.should.be.instanceof(Array).and.have.lengthOf(2);
     doc.items[0].should.equal(1);
     doc.items[1].should.equal(2);
+    Object.keys(doc).length.should.equal(2);
   });
 
   it('should deserialize', () => {
@@ -57,6 +58,7 @@ describe('example 1', () => {
     doc.items[0].should.have.property('val', 'a');
     doc.items[1].should.have.property('val', 'b');
     doc.items[2].should.have.property('val', 'c');
+    Object.keys(doc).length.should.equal(2);
   });
 
 });
@@ -102,6 +104,7 @@ describe('example 2', () => {
     doc.should.have.property('title', 'ProductX');
     doc.should.have.property('price', 12);
     doc.should.have.property('currency', 3);
+    Object.keys(doc).length.should.equal(4);
   });
 
   it('should serialize', () => {
@@ -118,6 +121,9 @@ describe('example 2', () => {
     doc.should.have.property('Price');
     doc.Price.should.have.property('Last', 12);
     doc.Price.should.have.property('Currency', 3);
+    Object.keys(doc).length.should.equal(2);
+    Object.keys(doc.Description).length.should.equal(2);
+    Object.keys(doc.Price).length.should.equal(2);
   });
 
 });

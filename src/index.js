@@ -10,7 +10,7 @@ function deser(config) {
 module.exports = deser;
 
 function serialize(data) {
-  let result = handleData(data, serializeDoc);
+  let result = handleData(data, serializeDoc.bind(this));
 
   return result;
 }
@@ -26,11 +26,13 @@ function serializeDoc(doc) {
     }
   }
 
-  for (let key in this.deserialize(doc)) {
-    if (this.deserialize.hasOwnProperty(key)) {
-      let val = this.fields[key];
+  let serializedDoc = this.serialize(doc);
 
-      result[key] = doc[key];
+  for (let key in serializedDoc) {
+    if (serializedDoc.hasOwnProperty(key)) {
+      let val = serializedDoc[key];
+
+      result[key] = val;
     }
   }
 
@@ -38,23 +40,29 @@ function serializeDoc(doc) {
 }
 
 function deserialize(data) {
-  let result = handleData(data, deserializeDoc);
+  let result = handleData(data, deserializeDoc.bind(this));
 
   return result;
 }
 
 function deserializeDoc(doc) {
   let result = {};
-  let props = {};
 
-  extendObject(props, this.fields);
-  extendObject(props, this.deserialize(doc));
-
-  for (let key in props) {
-    if (props.hasOwnProperty(key)) {
-      let val = props[key];
+  for (let key in this.fields) {
+    if (this.fields.hasOwnProperty(key)) {
+      let val = this.fields[key];
 
       result[key] = doc[val];
+    }
+  }
+
+  let deserializedDoc = this.deserialize(doc);
+
+  for (let key in deserializedDoc) {
+    if (deserializedDoc.hasOwnProperty(key)) {
+      let val = deserializedDoc[key];
+
+      result[key] = val;
     }
   }
 
@@ -77,12 +85,4 @@ function handleData(data, fn) {
   }
 
   return result;
-}
-
-function extendObject(obj1, obj2) {
-  for (let key in obj2) {
-    if (obj2.hasOwnProperty(key)) {
-      obj1[key] = obj2[key];
-    }
-  }
 }
