@@ -61,14 +61,14 @@ describe('(de)serialize only', () => {
   let mapper = deser({
     deserialize: function(doc) {
       return {
-        items: doc.items.map(function(item) {
-          return {val: item};
+        items: doc.things.map(function(thing) {
+          return {val: thing};
         }),
       };
     },
     serialize: function(doc) {
       return {
-        items: doc.items.map(function(item) {
+        things: doc.items.map(function(item) {
           return item.val;
         }),
       };
@@ -83,19 +83,21 @@ describe('(de)serialize only', () => {
       ],
     });
 
-    doc.should.have.property('items');
+    doc.should.have.property('things');
+    doc.should.not.have.property('items');
     Object.keys(doc).length.should.equal(1);
-    doc.items.should.be.instanceof(Array).and.have.lengthOf(2);
-    doc.items[0].should.equal(1);
-    doc.items[1].should.equal(2);
+    doc.things.should.be.instanceof(Array).and.have.lengthOf(2);
+    doc.things[0].should.equal(1);
+    doc.things[1].should.equal(2);
   });
 
   it('should deserialize', () => {
     let doc = mapper.deserialize({
-      items: ['a', 'b', 'c'],
+      things: ['a', 'b', 'c'],
     });
 
     doc.should.have.property('items');
+    doc.should.not.have.property('things');
     Object.keys(doc).length.should.equal(1);
     doc.items.should.be.instanceof(Array).and.have.lengthOf(3);
     doc.items[0].should.have.property('val', 'a');
@@ -115,14 +117,14 @@ describe('with fields & (de)serialize', () => {
     },
     deserialize: function(doc) {
       return {
-        items: doc.items.map(function(item) {
-          return {val: item};
+        items: doc.things.map(function(thing) {
+          return {val: thing};
         }),
       };
     },
     serialize: function(doc) {
       return {
-        items: doc.items.map(function(item) {
+        things: doc.items.map(function(item) {
           return item.val;
         }),
       };
@@ -146,11 +148,12 @@ describe('with fields & (de)serialize', () => {
     doc.should.not.have.property('FOO');
     doc.should.have.property('BAR', null);
     doc.should.have.property('BAZ', undefined);
-    doc.should.have.property('items');
+    doc.should.have.property('things');
+    doc.should.not.have.property('items');
     Object.keys(doc).length.should.equal(4);
-    doc.items.should.be.instanceof(Array).and.have.lengthOf(2);
-    doc.items[0].should.equal(1);
-    doc.items[1].should.equal(2);
+    doc.things.should.be.instanceof(Array).and.have.lengthOf(2);
+    doc.things[0].should.equal(1);
+    doc.things[1].should.equal(2);
   });
 
   it('should deserialize', () => {
@@ -159,7 +162,7 @@ describe('with fields & (de)serialize', () => {
       FOO: 'xyz',
       BAR: null,
       BAZ: undefined,
-      items: ['a', 'b', 'c'],
+      things: ['a', 'b', 'c'],
     });
 
     doc.should.have.property('eventId', 123);
@@ -168,6 +171,7 @@ describe('with fields & (de)serialize', () => {
     doc.should.have.property('bar', null);
     doc.should.have.property('baz', undefined);
     doc.should.have.property('items');
+    doc.should.not.have.property('things');
     Object.keys(doc).length.should.equal(4);
     doc.items.should.be.instanceof(Array).and.have.lengthOf(3);
     doc.items[0].should.have.property('val', 'a');

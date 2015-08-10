@@ -14,14 +14,14 @@ var mapper = deser({
   },
   deserialize: function(doc) {
     return {
-      items: doc.items.map(function(item) {
-        return {val: item};
+      items: doc.things.map(function(thing) {
+        return {val: thing};
       }),
     };
   },
   serialize: function(doc) {
     return {
-      items: doc.items.map(function(item) {
+      things: doc.items.map(function(item) {
         return item.val;
       }),
     };
@@ -31,7 +31,7 @@ var mapper = deser({
 mapper.deserialize({
   id_event: 123,
   foo_bar: 'baz',
-  items: ['a', 'b', 'c'],
+  things: ['a', 'b', 'c'],
 });
 // => {
 //   eventId: 123,
@@ -54,6 +54,6 @@ mapper.serialize({
 // => {
 //   id_event: 55,
 //   foo_bar: 'baz'
-//   items: [1, 2],
+//   things: [1, 2],
 // }
 ```
