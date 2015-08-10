@@ -6,7 +6,7 @@ function deser(config) {
     serialize: serialize.bind(config),
     deserialize: deserialize.bind(config),
   }
-};
+}
 
 module.exports = deser;
 
@@ -84,7 +84,7 @@ function handleData(data, fn) {
     });
   // single doc
   } else if (typeof data === 'object') {
-    result = fn(data)
+    result = fn(data);
   } else {
     throw new Error('Bad argument: ', data);
   }
