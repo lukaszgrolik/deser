@@ -1,6 +1,6 @@
 let should = require('should');
 
-let deser = require('../index');
+let deser = require('../deser');
 
 describe('config', () => {
 
@@ -14,7 +14,98 @@ describe('config', () => {
 
 });
 
-describe('with fields', () => {
+describe('fields only', () => {
+
+  let mapper = deser({
+    fields: {
+      eventId: 'id_event',
+      bar: 'BAR',
+      baz: 'BAZ',
+    },
+  });
+
+  it('should serialize', () => {
+    let doc = mapper.serialize({
+      eventId: 55,
+      foo: 'abc',
+      bar: null,
+      baz: undefined,
+    });
+
+    doc.should.have.property('id_event', 55);
+    doc.should.not.have.property('foo');
+    doc.should.not.have.property('FOO');
+    doc.should.have.property('BAR', null);
+    doc.should.have.property('BAZ', undefined);
+  });
+
+  it('should deserialize', () => {
+    let doc = mapper.deserialize({
+      id_event: 123,
+      FOO: 'xyz',
+      BAR: null,
+      BAZ: undefined,
+    });
+
+    doc.should.have.property('eventId', 123);
+    doc.should.not.have.property('FOO');
+    doc.should.not.have.property('foo');
+    doc.should.have.property('bar', null);
+    doc.should.have.property('baz', undefined);
+  });
+
+});
+
+describe('(de)serialize only', () => {
+
+  let mapper = deser({
+    deserialize: function(doc) {
+      return {
+        items: doc.items.map(function(item) {
+          return {val: item};
+        }),
+      };
+    },
+    serialize: function(doc) {
+      return {
+        items: doc.items.map(function(item) {
+          return item.val;
+        }),
+      };
+    },
+  });
+
+  it('should serialize', () => {
+    let doc = mapper.serialize({
+      items: [
+        {val: 1},
+        {val: 2},
+      ],
+    });
+
+    doc.should.have.property('items');
+    Object.keys(doc).length.should.equal(1);
+    doc.items.should.be.instanceof(Array).and.have.lengthOf(2);
+    doc.items[0].should.equal(1);
+    doc.items[1].should.equal(2);
+  });
+
+  it('should deserialize', () => {
+    let doc = mapper.deserialize({
+      items: ['a', 'b', 'c'],
+    });
+
+    doc.should.have.property('items');
+    Object.keys(doc).length.should.equal(1);
+    doc.items.should.be.instanceof(Array).and.have.lengthOf(3);
+    doc.items[0].should.have.property('val', 'a');
+    doc.items[1].should.have.property('val', 'b');
+    doc.items[2].should.have.property('val', 'c');
+  });
+
+});
+
+describe('with fields & (de)serialize', () => {
 
   let mapper = deser({
     fields: {

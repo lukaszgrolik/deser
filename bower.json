@@ -1,0 +1,27 @@
+{
+  "name": "deser",
+  "version": "0.0.0",
+  "description": "Data (de)serialization",
+  "homepage": "https://github.com/lukaszgrolik/deser",
+  "authors": [
+    "Łukasz Grolik"
+  ],
+  "main": "dist/deser.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "serialize",
+    "deserialize"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

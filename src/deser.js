@@ -27,13 +27,15 @@ function serializeDoc(doc) {
     }
   }
 
-  let serializedDoc = this.serialize(doc);
+  if (typeof this.serialize === 'function') {
+    let serializedDoc = this.serialize(doc);
 
-  for (let key in serializedDoc) {
-    if (serializedDoc.hasOwnProperty(key)) {
-      let val = serializedDoc[key];
+    for (let key in serializedDoc) {
+      if (serializedDoc.hasOwnProperty(key)) {
+        let val = serializedDoc[key];
 
-      result[key] = val;
+        result[key] = val;
+      }
     }
   }
 
@@ -57,13 +59,15 @@ function deserializeDoc(doc) {
     }
   }
 
-  let deserializedDoc = this.deserialize(doc);
+  if (typeof this.deserialize === 'function') {
+    let deserializedDoc = this.deserialize(doc);
 
-  for (let key in deserializedDoc) {
-    if (deserializedDoc.hasOwnProperty(key)) {
-      let val = deserializedDoc[key];
+    for (let key in deserializedDoc) {
+      if (deserializedDoc.hasOwnProperty(key)) {
+        let val = deserializedDoc[key];
 
-      result[key] = val;
+        result[key] = val;
+      }
     }
   }
 
