@@ -1,4 +1,4 @@
-# deser
+# deser.js
 
 Data (de)serialization
 
