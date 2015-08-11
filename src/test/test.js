@@ -1,6 +1,17 @@
 let should = require('should');
+let commander = require('commander');
 
-let deser = require('../deser');
+commander
+.option('-e, --env [type]', 'Environment')
+.parse(process.argv);
+
+let deserPath = '../deser' + (commander.env === 'prod' ? '.min' : '');
+
+// console.log('commander.env', commander.env)
+// console.log('deserPath', deserPath);
+
+let deser = require(deserPath);
+
 
 describe('config', () => {
 

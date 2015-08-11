@@ -9,6 +9,7 @@
   "author": "Łukasz Grolik",
   "license": "MIT",
   "devDependencies": {
+    "commander": "2.8.1",
     "gulp": "3.9.0",
     "gulp-babel": "5.2.0",
     "gulp-load-plugins": "0.10.0",
