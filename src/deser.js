@@ -1,14 +1,9 @@
-// @todo throw if config.serialize or config.deserialize contain field from config.fields
-// @todo option - pass non-listed fields
-
 function deser(config) {
   return {
     serialize: serialize.bind(config),
     deserialize: deserialize.bind(config),
   }
 }
-
-module.exports = deser;
 
 function serialize(data) {
   let result = handleData(data, serializeDoc.bind(this));

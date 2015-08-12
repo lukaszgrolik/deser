@@ -12,7 +12,6 @@ let deserPath = '../deser' + (commander.env === 'prod' ? '.min' : '');
 
 let deser = require(deserPath);
 
-
 describe('config', () => {
 
   it('should fail if deserialize option overwrites field', () => {
