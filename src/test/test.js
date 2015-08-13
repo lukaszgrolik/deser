@@ -46,7 +46,8 @@ describe('fields only', () => {
     doc.should.not.have.property('foo');
     doc.should.not.have.property('FOO');
     doc.should.have.property('BAR', null);
-    doc.should.have.property('BAZ', undefined);
+    doc.should.not.have.property('BAZ');
+    Object.keys(doc).length.should.equal(2);
   });
 
   it('should deserialize', () => {
@@ -61,7 +62,8 @@ describe('fields only', () => {
     doc.should.not.have.property('FOO');
     doc.should.not.have.property('foo');
     doc.should.have.property('bar', null);
-    doc.should.have.property('baz', undefined);
+    doc.should.not.have.property('baz');
+    Object.keys(doc).length.should.equal(2);
   });
 
 });
@@ -130,6 +132,7 @@ describe('with fields & (de)serialize', () => {
         items: doc.things.map(function(thing) {
           return {val: thing};
         }),
+        abc: doc.ABC,
       };
     },
     serialize: function(doc) {
@@ -137,6 +140,7 @@ describe('with fields & (de)serialize', () => {
         things: doc.items.map(function(item) {
           return item.val;
         }),
+        ABC: doc.abc,
       };
     },
   });
@@ -151,16 +155,18 @@ describe('with fields & (de)serialize', () => {
         {val: 1},
         {val: 2},
       ],
+      abc: undefined,
     });
 
     doc.should.have.property('id_event', 55);
     doc.should.not.have.property('foo');
     doc.should.not.have.property('FOO');
     doc.should.have.property('BAR', null);
-    doc.should.have.property('BAZ', undefined);
+    doc.should.have.not.property('BAZ');
     doc.should.have.property('things');
     doc.should.not.have.property('items');
-    Object.keys(doc).length.should.equal(4);
+    doc.should.not.have.property('ABC');
+    Object.keys(doc).length.should.equal(3);
     doc.things.should.be.instanceof(Array).and.have.lengthOf(2);
     doc.things[0].should.equal(1);
     doc.things[1].should.equal(2);
@@ -173,16 +179,18 @@ describe('with fields & (de)serialize', () => {
       BAR: null,
       BAZ: undefined,
       things: ['a', 'b', 'c'],
+      ABC: undefined,
     });
 
     doc.should.have.property('eventId', 123);
     doc.should.not.have.property('FOO');
     doc.should.not.have.property('foo');
     doc.should.have.property('bar', null);
-    doc.should.have.property('baz', undefined);
+    doc.should.not.have.property('baz');
     doc.should.have.property('items');
     doc.should.not.have.property('things');
-    Object.keys(doc).length.should.equal(4);
+    doc.should.not.have.property('abc');
+    Object.keys(doc).length.should.equal(3);
     doc.items.should.be.instanceof(Array).and.have.lengthOf(3);
     doc.items[0].should.have.property('val', 'a');
     doc.items[1].should.have.property('val', 'b');

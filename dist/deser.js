@@ -27,7 +27,9 @@
     for (var key in this.fields) {
       if (this.fields.hasOwnProperty(key)) {
         var val = this.fields[key];
-        result[val] = doc[key];
+        if (doc[key] !== undefined) {
+          result[val] = doc[key];
+        }
       }
     }
     if (typeof this.serialize === 'function') {
@@ -35,7 +37,9 @@
       for (var key in serializedDoc) {
         if (serializedDoc.hasOwnProperty(key)) {
           var val = serializedDoc[key];
-          result[key] = val;
+          if (val !== undefined) {
+            result[key] = val;
+          }
         }
       }
     }
@@ -50,7 +54,9 @@
     for (var key in this.fields) {
       if (this.fields.hasOwnProperty(key)) {
         var val = this.fields[key];
-        result[key] = doc[val];
+        if (doc[val] !== undefined) {
+          result[key] = doc[val];
+        }
       }
     }
     if (typeof this.deserialize === 'function') {
@@ -58,7 +64,9 @@
       for (var key in deserializedDoc) {
         if (deserializedDoc.hasOwnProperty(key)) {
           var val = deserializedDoc[key];
-          result[key] = val;
+          if (val !== undefined) {
+            result[key] = val;
+          }
         }
       }
     }

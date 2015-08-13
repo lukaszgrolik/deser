@@ -18,7 +18,9 @@ function serializeDoc(doc) {
     if (this.fields.hasOwnProperty(key)) {
       let val = this.fields[key];
 
-      result[val] = doc[key];
+      if (doc[key] !== undefined) {
+        result[val] = doc[key];
+      }
     }
   }
 
@@ -29,7 +31,9 @@ function serializeDoc(doc) {
       if (serializedDoc.hasOwnProperty(key)) {
         let val = serializedDoc[key];
 
-        result[key] = val;
+        if (val !== undefined) {
+          result[key] = val;
+        }
       }
     }
   }
@@ -50,7 +54,9 @@ function deserializeDoc(doc) {
     if (this.fields.hasOwnProperty(key)) {
       let val = this.fields[key];
 
-      result[key] = doc[val];
+      if (doc[val] !== undefined) {
+        result[key] = doc[val];
+      }
     }
   }
 
@@ -61,7 +67,9 @@ function deserializeDoc(doc) {
       if (deserializedDoc.hasOwnProperty(key)) {
         let val = deserializedDoc[key];
 
-        result[key] = val;
+        if (val !== undefined) {
+          result[key] = val;
+        }
       }
     }
   }
