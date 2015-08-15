@@ -1,6 +1,6 @@
 {
   "name": "deser",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Data (de)serialization",
   "homepage": "https://github.com/lukaszgrolik/deser",
   "authors": [
