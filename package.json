@@ -2,12 +2,28 @@
   "name": "deser",
   "version": "0.0.0",
   "description": "Data (de)serialization",
-  "main": "dist/deser.js",
-  "scripts": {
-    "test": "mocha dist/test"
+  "homepage": "https://github.com/lukaszgrolik/deser",
+  "author": {
+    "name": "Łukasz Grolik",
+    "email": "lukasz@grolik.pl",
+    "url": "https://github.com/lukaszgrolik"
   },
-  "author": "Łukasz Grolik",
-  "license": "MIT",
+  "scripts": {
+    "test": "mocha dist/test",
+    "test-prod": "mocha dist/test --env=prod"
+  },
+  "main": "dist/deser.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lukaszgrolik/deser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lukaszgrolik/deser/issues"
+  },
+  "keywords": [
+    "serialize",
+    "deserialize"
+  ],
   "devDependencies": {
     "commander": "2.8.1",
     "gulp": "3.9.0",
@@ -22,5 +38,6 @@
   },
   "dependencies": {
     "source-map-support": "0.3.2"
-  }
+  },
+  "license": "MIT"
 }
