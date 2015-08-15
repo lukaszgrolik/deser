@@ -12,18 +12,6 @@ let deserPath = '../deser' + (commander.env === 'prod' ? '.min' : '');
 
 let deser = require(deserPath);
 
-describe('config', () => {
-
-  it('should fail if deserialize option overwrites field', () => {
-    throw new Error();
-  });
-
-  it('should fail if serialize option overwrites field', () => {
-    throw new Error();
-  });
-
-});
-
 describe('fields only', () => {
 
   let mapper = deser({
@@ -71,14 +59,14 @@ describe('fields only', () => {
 describe('(de)serialize only', () => {
 
   let mapper = deser({
-    deserialize: function(doc) {
+    deserialize(doc) {
       return {
         items: doc.things.map(function(thing) {
           return {val: thing};
         }),
       };
     },
-    serialize: function(doc) {
+    serialize(doc) {
       return {
         things: doc.items.map(function(item) {
           return item.val;
@@ -127,7 +115,7 @@ describe('with fields & (de)serialize', () => {
       bar: 'BAR',
       baz: 'BAZ',
     },
-    deserialize: function(doc) {
+    deserialize(doc) {
       return {
         items: doc.things.map(function(thing) {
           return {val: thing};
@@ -135,7 +123,7 @@ describe('with fields & (de)serialize', () => {
         abc: doc.ABC,
       };
     },
-    serialize: function(doc) {
+    serialize(doc) {
       return {
         things: doc.items.map(function(item) {
           return item.val;
@@ -202,7 +190,7 @@ describe('with fields & (de)serialize', () => {
 describe('nested object', () => {
 
   let mapper = deser({
-    deserialize: function(doc) {
+    deserialize(doc) {
       return {
         id: doc.Description.Id,
         title: doc.Description.Title,
@@ -210,7 +198,7 @@ describe('nested object', () => {
         currency: doc.Price.Currency,
       };
     },
-    serialize: function(doc) {
+    serialize(doc) {
       return {
         Description: {
           Id: doc.id,
@@ -270,14 +258,14 @@ describe('array of objects', () => {
     fields: {
       eventId: 'id_event',
     },
-    deserialize: function(doc) {
+    deserialize(doc) {
       return {
         items: doc.items.map(function(item) {
           return {val: item};
         }),
       };
     },
-    serialize: function(doc) {
+    serialize(doc) {
       return {
         items: doc.items.map(function(item) {
           return item.val;
